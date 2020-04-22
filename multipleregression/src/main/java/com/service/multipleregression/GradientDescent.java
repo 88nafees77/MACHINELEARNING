@@ -2,85 +2,84 @@ package com.service.multipleregression;
 
 public class GradientDescent implements IOptimizer {
 
-	float learningRate;
+	double learningRate;
 
 	int epoch;
 
-	public GradientDescent(float learningRate, int epoch) {
+	public GradientDescent(double learningRate, int epoch) {
 
 		this.learningRate = learningRate;
 
 		this.epoch = epoch;
 	}
 
-	public void optimize(float coefficients[], float x[], float y[]) {
+	public void optimize(double beta[], double x[][], double y[]) {
 
-		float betanew[] = new float[coefficients.length];
+		double betanew[] = new double[beta.length];
 
-		for (int j = 0; j < coefficients.length; j++) {
+		for (int j = 0; j < beta.length; j++) {
 
-			betanew[j] = coefficients[j];
+			betanew[j] = beta[j];
 		}
 
 		for (int i = 0; i < epoch; i++) {
 
-			coefficients[0] = betanew[0];
+			for (int k = 0; k < beta.length; k++) {
 
-			coefficients[1] = betanew[1];
+				beta[k] = betanew[k];
 
-			betanew[0] = coefficients[0] - learningRate * beta0Update(y, x, coefficients);
+			}
+			// System.out.println("cost Value " + costFunction(beta, x, y));
 
-			betanew[1] = coefficients[1] - learningRate * beta1Update(y, x, coefficients);
+			for (int k = 0; k < beta.length; k++) {
+
+				betanew[k] = beta[k] - learningRate * betaUpdate(y, x, beta, k);
+
+			}
 
 		}
 
 	}
 
-	public float yPredict(float x, float coefficients[]) {
+	public double yPredict(double x[][], double beta[], int i) {
 
-		return coefficients[0] + coefficients[1] * x;
+		double sum = beta[0];
+
+		for (int j = 1; j < x[0].length; j++) {
+			sum = sum + beta[j] * x[i][j];
+		}
+
+		return sum;
 
 	}
 
-	public void costFunction(float[] coefficients, float[] x, float[] y) {
+	public double costFunction(double[] beta, double[][] x, double[] y) {
 		// TODO Auto-generated method stub
 
-		float len = (float) y.length;
+		double len = (double) y.length;
 
-		float sum = 0;
+		double sum = 0;
 
 		for (int i = 0; i < len; i++) {
 
-			float value = (float) Math.pow((yPredict(x[i], coefficients) - y[i]), 2);
+			float value = (float) Math.pow((yPredict(x, beta, i) - y[i]), 2);
 
 			sum = sum + value;
 		}
 
-		// return sum / (2 * len);
+		return sum / (2 * len);
 
 	}
 
-	public float beta0Update(float y[], float x[], float coefficients[]) {
+	public double betaUpdate(double y[], double x[][], double beta[], int j) {
 
-		float sum = 0;
+		double sum = 0;
 
-		for (int i = 0; i < y.length && i < x.length; i++) {
-
-			sum = sum + (yPredict(x[i], coefficients) - y[i]);
-		}
-
-		return sum / (float) y.length;
-	}
-
-	public float beta1Update(float y[], float x[], float coefficients[]) {
-
-		float sum = 0;
-
-		float len = (float) y.length;
+		double len = (double) y.length;
 
 		for (int i = 0; i < len; i++) {
 
-			sum = sum + ((yPredict(x[i], coefficients) - y[i]) * x[i]);
+			sum = sum + ((yPredict(x, beta, i) - y[i]) * x[i][j]);
 		}
 
 		return sum / len;

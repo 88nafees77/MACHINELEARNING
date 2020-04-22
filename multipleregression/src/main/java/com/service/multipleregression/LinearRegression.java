@@ -2,7 +2,7 @@ package com.service.multipleregression;
 
 public class LinearRegression {
 
-	float[] coefficients;
+	double[] beta;
 
 	IOptimizer optimizer;
 
@@ -10,16 +10,16 @@ public class LinearRegression {
 		this.optimizer = optimizer;
 	}
 
-	public void initializeCoefficients(float coefficients[]) {
-		this.coefficients = coefficients;
+	public void initializeCoefficients(double coefficients[]) {
+		this.beta = coefficients;
 	}
 
-	public void training(float x[], float y[]) {
-		optimizer.optimize(coefficients, x, y);
+	public void training(double x[][], double y[]) {
+		optimizer.optimize(beta, x, y);
 	}
 
-	public float[] getCoefficients() {
-		return this.coefficients;
+	public double[] getCoefficients() {
+		return this.beta;
 	}
 
 }

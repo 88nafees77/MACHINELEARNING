@@ -1,4 +1,4 @@
-package com.services.machinelearning.training;
+package com.services.simpleregression;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -7,15 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReaderUtility {
+public class ReadFromFile implements IReader {
 
 	private String csvFile;
 
-	public ReaderUtility(String path) {
+	public ReadFromFile(String path) {
 		this.csvFile = path;
 	}
 
-	public List<String[]> reader(String splitBy) {
+	public List<String[]> inputReader(String splitBy) {
 		List<String[]> input = new ArrayList<String[]>();
 		BufferedReader br = null;
 		String line = "";
